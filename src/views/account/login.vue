@@ -4,8 +4,8 @@
       <div style="height:10%;" />
       <el-card shadow="always" class="login-card" :body-style="{ padding: '0px' }">
         <div class="title">Admin</div>
-        <div class="desc">admin 企业级中台管理系统</div>
-        <el-form ref="form" :model="form" :rules="formRules">
+        <div class="desc">admin 后台管理系统</div>
+        <el-form ref="form" :model="form" :rules="formRules" size="medium">
           <el-form-item prop="userName">
             <el-input
               ref="userName"
@@ -13,8 +13,11 @@
               type="text"
               auto-complete="off"
               placeholder="账号"
+              @keyup.enter.native="onLogin"
             >
-              <i slot="prefix" class="el-input__icon el-icon-user" />
+              <template #prefix>
+                <i class="el-input__icon el-icon-user" />
+              </template>
             </el-input>
           </el-form-item>
           <el-form-item prop="password">
@@ -27,7 +30,9 @@
               placeholder="密码"
               @keyup.enter.native="onLogin"
             >
-              <i slot="prefix" class="el-input__icon el-icon-lock" />
+              <template #prefix>
+                <i class="el-input__icon el-icon-lock" />
+              </template>
             </el-input>
           </el-form-item>
           <el-form-item prop="verifyCode">
@@ -43,7 +48,9 @@
               style="width:66%;"
               @keyup.enter.native="onLogin"
             >
-              <i slot="prefix" class="el-input__icon fa fa-shield" />
+              <template #prefix>
+                <i class="el-input__icon fa fa-shield" />
+              </template>
             </el-input>
             <img
               :src="verifyCodeImg"
@@ -127,24 +134,22 @@ export default {
         this.loginLoading = false
         this.loginText = '重新登录'
 
-        if (res.msg) {
-          this.$message({
-            message: res.msg,
-            type: 'error'
-          })
-        }
-
-        if (res.data === 1) {
-          this.getLoginVerifyCode()
-          this.$refs.verifyCode.focus()
-        } else if (res.data === 2) {
-          this.$refs.verifyCode.focus()
-        } else if (res.data === 3) {
-          this.getLoginVerifyCode()
-          this.$refs.userName.focus()
-        } else if (res.data === 4) {
-          this.getLoginVerifyCode()
-          this.$refs.password.focus()
+        switch (res.data) {
+          case 1:
+            this.getLoginVerifyCode()
+            this.$refs.verifyCode.focus()
+            break
+          case 2:
+            this.$refs.verifyCode.focus()
+            break
+          case 3:
+            this.getLoginVerifyCode()
+            this.$refs.userName.focus()
+            break
+          case 4:
+            this.getLoginVerifyCode()
+            this.$refs.password.focus()
+            break
         }
         return
       }
@@ -155,21 +160,9 @@ export default {
       const res = await this.$store.dispatch('user/getLoginInfo')
       this.loginLoading = false
 
-      if (!res) {
+      if (!res?.success) {
         this.loginLoading = false
         this.loginText = '重新登录'
-        return
-      }
-
-      if (!res.success) {
-        this.loginLoading = false
-        this.loginText = '重新登录'
-        if (res.msg) {
-          this.$message({
-            message: res.msg,
-            type: 'error'
-          })
-        }
         return
       }
 
@@ -223,7 +216,7 @@ export default {
 </style>
 <style lang="scss" scoped>
 .login-card {
-  width: 350px;
+  width: 320px;
   padding: 25px 25px 5px 25px;
   position: relative;
   margin: 0 auto;

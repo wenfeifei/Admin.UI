@@ -137,6 +137,7 @@ a, a:focus, a:hover {
 
 .container .el-main{
     padding: 0px;
+    height:100%;
 }
 
 .container .aside .el-menu {
@@ -174,4 +175,18 @@ input:-webkit-autofill {
 .pagination{
     margin-top: 15px;
     margin-bottom: 5px;
+}
+
+.ad-pagination__selection{
+    float: left;
+    font-weight: 400;
+    color: #606266;
+    margin-right:10px;
+}
+.ad-form-query{
+    & .el-form-item--mini, & .el-form-item--small{
+        &.el-form-item{
+            margin-bottom: 10px;
+        }
+    }
 }
